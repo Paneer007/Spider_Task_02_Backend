@@ -1,3 +1,4 @@
+let userData =''
 const clearLayout =()=>{
     const root = document.getElementById('root')
     root.innerHTML=''
@@ -77,9 +78,11 @@ const homePage=()=>{
         </div>
     </div>
 </div>
-
-
     `
+}
+const getUserData =async()=>{
+    const result = await axios.get('http://localhost:3001/api/userData')
+
 }
 const sendLoginDetails =async()=>{
     const username = document.getElementById("loginUsername").value
@@ -88,6 +91,7 @@ const sendLoginDetails =async()=>{
     const result = await axios.post("http://localhost:3001/api/login",body)
     if(result.status==200){
         localStorage.setItem('token',result.data.token)
+        getUserData()
         homePage()
     }
 }
