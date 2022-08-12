@@ -15,10 +15,10 @@ const makeLoginPageUi =()=>{
                 <p>Login</p>
             </div>
             <div>
-                <input placeholder="username">
+                <input placeholder="username" id="loginUsername">
             </div>
             <div>
-                <input placeholder="password">
+                <input placeholder="password" id="loginPassword">
             </div>
             <div>
                 <button id="SubmitLoginButton">Login</button>
@@ -42,10 +42,10 @@ const makeSignUpPageUi =()=>{
                 <p>Sign up</p>
             </div>
             <div>
-                <input placeholder="username">
+                <input id="signupUsername" placeholder="username">
             </div>
             <div>
-                <input placeholder="password">
+                <input id="signupPassword" placeholder="password">
             </div>
             <div>
                 <button id="SubmitSignUpButton">Sign Up</button>
@@ -55,6 +55,42 @@ const makeSignUpPageUi =()=>{
     </div>
     `
 }
+const homePage=()=>{
+    clearLayout()
+    const root = document.getElementById('root')
+    root.innerHTML=`
+    <div>
+    <div id="theSideBarContent">
+        <div id="sideBarContentDiv">
+            <p id="HomePageButton">Home Page</p>
+            <p id="newGroupButton">New Group</p>
+            <p id="joinGroupButton">Join Group</p>
+        </div>
+    </div>
+    <div id="TheMainContent">
+        <div id="TitleOfHomePage">
+            <div>
+                <p>Greeting</p>
+            </div>
+        </div>
+        <div id="mainContentOfThisPage">
+        </div>
+    </div>
+</div>
+
+
+    `
+}
+const sendLoginDetails =async()=>{
+    const username = document.getElementById("loginUsername").value
+    const password = document.getElementById("loginPassword").value
+    const body={username:username,password:password}
+    const result = await axios.post("http://localhost:3001/api/login",body)
+    if(result.status==200){
+        localStorage.setItem('token',result.data.token)
+        homePage()
+    }
+}
 const addEventLoginPageListener=()=>{
     const signupSwitchButton = document.getElementById('goToSignup')
     signupSwitchButton.addEventListener('click',()=>{
@@ -63,7 +99,7 @@ const addEventLoginPageListener=()=>{
     })
     const loginButton = document.getElementById("SubmitLoginButton")
     loginButton.addEventListener('click',()=>{
-        
+        sendLoginDetails()
     })
 
 }
@@ -75,10 +111,20 @@ const addEventSignUpPageListener =()=>{
     })
     const signupButton = document.getElementById("SubmitSignUpButton")
     signupButton.addEventListener('click',()=>{
-
+        sendSignUpDetails()
     })
+}
+const sendSignUpDetails = async()=>{
+    const username = document.getElementById("signupUsername").value
+    const password = document.getElementById("signupPassword").value
+    const body={username:username,password:password}
+    const result = await axios.post("http://localhost:3001/api/signup",body)
+    if(result.status == 200){
+        alert("Account made successfully ")
+        makeLoginPageUi()
+        addEventLoginPageListener()
+    }
 
-    
 }
 const main =()=>{
     makeSignUpPageUi()
