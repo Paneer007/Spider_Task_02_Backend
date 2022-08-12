@@ -7,8 +7,8 @@ signupRouter.post('/',async (req,res)=>{
     if(!(body.password&& body.username)){
         return res.status(400).send({message:"enter valid username and password"})
     }
-    const userList = await User.findOne({username:body.username})
-    if(userList.length>0){
+    let userList = await User.findOne({username:body.username})
+    if(userList){
         return res.status(400).send({error:"Enter a new email"})
     }
     let saltRound = 10
