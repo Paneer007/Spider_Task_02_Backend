@@ -8,6 +8,10 @@ signupRouter.post('/',async (req,res)=>{
         return res.status(400).send({message:"enter valid username and password"})
     }
     //TODO: Search for username in the server and report error
+    const userList = await User.findOne({username:body.username})
+    if(userList.length>0){
+        return res.status(400).send({error:"Enter a new email"})
+    }
     let saltRound = 10
     const passwordHash = await bcrypt.hash(body.password,saltRound)
     const user = new User({username:body.username, password: passwordHash})

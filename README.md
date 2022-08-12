@@ -22,7 +22,7 @@
 
 ### Feature checklist
 <p>
-    Login/Signup<br>
+    <s> Login/Signup </s> <br>
     User Page<br>
     Group Page <br>
     Create and Join Group <br>
