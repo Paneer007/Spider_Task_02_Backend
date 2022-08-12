@@ -21,4 +21,10 @@
 </ul>
 
 ### Feature checklist
-- [] Home page
+<p>
+    Login/Signup<br>
+    User Page<br>
+    Group Page <br>
+    Create and Join Group <br>
+    Detailed exchange page <br>
+</p>
