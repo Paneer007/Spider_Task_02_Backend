@@ -9,7 +9,7 @@ const groupSchema = new mongoose.Schema({
         }
     ],
     roomId:String,
-    budget:Number,
+    budget:String,
     location:String,
     locked:{
         type:String,

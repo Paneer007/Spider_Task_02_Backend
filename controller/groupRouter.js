@@ -3,9 +3,9 @@ const Group = require('../model/Group')
 const jwt = require('jsonwebtoken')
 const { v4: uuidv4 } = require('uuid');
 const getToken=(req)=>{
-    const token = req.get('authorization')
-    if(token && token.toLowerCase.startsWith('bearer')){
-        return token.substring(7)
+    const authorization = req.get('authorization')
+    if(authorization && authorization.toLowerCase().startsWith('bearer')){
+        return authorization.substring(7)
     }else{
         return false
     }
