@@ -1,5 +1,3 @@
-const { default: axios } = require("axios")
-
 let userData =''
 const clearLayout =()=>{
     const root = document.getElementById('root')
@@ -31,7 +29,6 @@ const makeLoginPageUi =()=>{
     </div>
     `
 }
-
 const makeSignUpPageUi =()=>{
     clearLayout()
     const root = document.getElementById('root')
@@ -86,13 +83,52 @@ const homePage=()=>{
     `
 }
 const getUserData =async()=>{
-    const token = localStorage.getItem('token')
-    console.log(token)
-    const result = await axios.get('http://localhost:3001/api/userdata',{headers:{'authorization':token}})
-    userData= result.data
+    return new Promise(async(resolve,reject)=>{
+        const token = localStorage.getItem('token')
+        const result = await axios.get('http://localhost:3001/api/userdata',{headers:{'authorization':token}})
+        console.log(result)
+        userData= result.data
+        return resolve(100)
+    })
+   
 }
-const FillTheGroups =()=>{
+const appendTheGroupThingy=(x,groupsDiv)=>{
+    const groupData = document.createElement('div')
+    groupsDiv.appendChild(groupData)
+    groupData.className="GameContent"
+    groupData.innerHTML=`
+        <p id="groupName-${x.roomId}">Group Name: ${x.name}</p>
+        <p id="groupRoomId-${x.roomId}">Room Id: ${x.roomId}</p>
+        <p id="visitGroupPage-${x.roomId}">Enter</p>
+        <p id="deleteGroupPage-${x.roomId}">Leave Group</p>
+    `
+    addEventListenersToGroup(x.roomId)
+}
+const createGiftPageLayout=()=>{
+    const root = document.getElementById('root')
+    root.innerHTML=`
+    `
+}
+const EnterGroupPage=async(x)=>{
+    clearLayout()
+    createGiftPageLayout()
+}
+const addEventListenersToGroup=(x)=>{
+    const EnterGroupPage = document.getElementById(`visitGroupPage-${x.roomId}`)
+    EnterGroupPage.addEventListener('click',()=>{
+        EnterGroupPage()
+    })
+    const LeaveGroup = document.getElementById(`deleteGroupPage-${x.roomId}`)
+    LeaveGroup.addEventListener('click',()=>{
+        console.log('Leaving Group')
+    })
+}
 
+const FillTheGroups = async()=>{
+    const groupsDiv = document.getElementById('mainContentOfThisPage')
+    console.log(userData)
+    groupsDiv.innerHTML=``
+    userData.groups.forEach(x=>appendTheGroupThingy(x,groupsDiv))
 }
 const addGroupPopUp =()=>{
     const popUp = document.getElementById("PopUp")
@@ -113,8 +149,10 @@ const newGroupPopUp=()=>{
         <input id="groupNameInput">
         <p>Enter location</p>
         <input id="groupLocationInput">
-        <p>Enter Budget </p>
+        <p>Enter Budget</p>
         <input id="groupBudgetInput">
+        <p>Enter password</p>
+        <input id="groupPasswordInput">
         <p id="sendGroupInput">Send</p>
         <p id="cancelGroupInput">Cancel</p>
     </div>
@@ -128,11 +166,14 @@ const sendMakeGroupData=async ()=>{
     const groupNameInput = document.getElementById("groupNameInput").value
     const groupLocationInput = document.getElementById("groupLocationInput").value
     const groupBudgetInput = document.getElementById("groupBudgetInput").value
-    const body = {groupNameInput, groupLocationInput,groupBudgetInput}
+    const groupPasswordInput = document.getElementById("groupPasswordInput").value
+    const body = {groupNameInput, groupLocationInput,groupBudgetInput,groupPasswordInput}
     const token = localStorage.getItem('token')
     const response = await axios.post("http://localhost:3001/api/groupdata",body,{headers:{'authorization':token}})
     if(response.status==200){
         removePopUp()
+        await getUserData()
+        FillTheGroups()
     }
 }
 const addMakeGroupPopUpEventListeners=()=>{
@@ -145,14 +186,22 @@ const addMakeGroupPopUpEventListeners=()=>{
         removePopUp()
     })
 }
-const sendJoinGroupData=()=>{
-    const roomID= document.getElementById("groupRoomIDInput").value
-    const body ={roomID}
-    const token = localStorage.getItem('token')
-    const response = await axios.post("http://localhost:3001/api/groupdata/joinGroup")
+const sendJoinGroupData=async()=>{
+    try{
+        const roomID= document.getElementById("groupRoomIDInput").value
+        const body ={roomID}
+        const token = localStorage.getItem('token')
+        const resp = await axios.post("http://localhost:3001/api/groupdata/joingroup",body,{"headers":{"authorization":token}})
+        if(resp.status==200){
+            removePopUp()
+        }
+    }catch(e){
+        alert(e.response.data.message)
+    }
+    
 }
 const addJoinGroupPopUpEventListeners=()=>{
-    const sendGroupInput = document.getElementById('sendGroupInput')
+    const sendGroupInput = document.getElementById('sendGroupIDInput')
     sendGroupInput.addEventListener('click',()=>{
         sendJoinGroupData()
     })
@@ -177,8 +226,8 @@ const addEventListenerToMainContentSideBar=()=>{
         addJoinGroupPopUpEventListeners()
     })
 }
-const homePageAfterLogin=()=>{
-    getUserData()
+const homePageAfterLogin=async()=>{
+    await getUserData()
     homePage()
     FillTheGroups()
     addEventListenerToMainContentSideBar()
@@ -203,7 +252,6 @@ const addEventLoginPageListener=()=>{
     loginButton.addEventListener('click',()=>{
         sendLoginDetails()
     })
-
 }
 const addEventSignUpPageListener =()=>{
     const loginSwitchButton = document.getElementById('goToLogin')
