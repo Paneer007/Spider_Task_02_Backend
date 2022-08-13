@@ -2,6 +2,7 @@ const groupRouter = require('express').Router()
 const Group = require('../model/Group')
 const User = require("../model/User")
 const jwt = require('jsonwebtoken')
+const bcrypt = require('bcrypt')
 const { v4: uuidv4 } = require('uuid');
 const getToken=(req)=>{
     const authorization = req.get('authorization')
@@ -22,7 +23,7 @@ groupRouter.post("/",async(req,res)=>{
         return res.status(400).send({message:"Enter a valid token"})
     }
     const saltRound = 10
-    const passHash = await bcrypt.hash(body.password, saltRound)
+    const passHash = await bcrypt.hash(body.groupPasswordInput, saltRound)
     const roomId= uuidv4();
     const group = new Group({
         password: passHash,
@@ -32,7 +33,7 @@ groupRouter.post("/",async(req,res)=>{
         location: body.groupLocationInput,
         budget: body.groupBudgetInput,
         creatorId:decodedToken.id,
-        participants: [decodedToken.id]
+        participants: [{Details:decodedToken.id,date: new Date()}]
     })
     await group.save()
     const user = await User.findById(decodedToken.id)
@@ -60,5 +61,19 @@ groupRouter.post("/joingroup",async(req,res)=>{
     await user.save()
     await group.save()
     return res.status(200).send({message:"user added to the room and group updated"})
+})
+groupRouter.get("/:id",async(req,res)=>{
+    const token = getToken(req)
+    if(!token){
+        return res.status(400).send({message:"send a valid token"})
+    }
+    const decodedToken = jwt.decode(token,process.env.secret)
+    if(!decodedToken){
+        return res.status(400).send({message:"Enter a valid token"})
+    }
+    const searchId = req.params.id
+    const group = await Group.findById(searchId).populate('participants.Details')
+    console.log(group)
+    return res.status(200).send(group)
 })
 module.exports = groupRouter
