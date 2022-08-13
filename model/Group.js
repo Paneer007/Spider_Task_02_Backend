@@ -2,11 +2,16 @@ const mongoose = require("mongoose")
 const groupSchema = new mongoose.Schema({
     name:String,
     date: Date,
+    password:String,
     participants:[
-        {
-            type:mongoose.Schema.Types.ObjectId,
-            ref:"User"
-        }
+            {
+                Details:
+                    {
+                        type:mongoose.Schema.Types.ObjectId,
+                        ref:"User",
+                    },
+                DateOfJoining: Date
+            }
     ],
     roomId:String,
     budget:String,

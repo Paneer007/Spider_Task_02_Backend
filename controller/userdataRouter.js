@@ -18,7 +18,7 @@ userdataRouter.get('/',async (req,res)=>{
     if(!decodedToken){
         return res.status(400).send({message:"Enter a valid token"})
     }
-    const user = await User.findById(decodedToken.id)
+    const user = await User.findById(decodedToken.id).populate('groups')
     return res.status(200).send(user)
 })
 module.exports= userdataRouter
