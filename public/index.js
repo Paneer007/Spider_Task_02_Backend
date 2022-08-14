@@ -3,6 +3,59 @@ const clearLayout =()=>{
     const root = document.getElementById('root')
     root.innerHTML=''
 }
+const giftPage=()=>{
+    userData.toGift.forEach(x=>addGiftDetails(x))
+}
+const randomNumberToken=()=>{
+    return Math.random()*10000000
+}
+
+const sendUpdateGiftItemFunction=async(x)=>{
+    const token = localStorage.getItem('token')
+    const Name = document.getElementById('giftNameInput').value
+    const Budget = document.getElementById('giftBudgetInput').value
+    const resp = await axios.post(`http://localhost:3001/api/giftData/${x._id}/update`,body,{headers:{'authorization':token}})
+}
+const addEventListenersToGiftPagePop=(x)=>{
+    const button = document.getElementById("sendStuff")
+    button.addEventListener('click',()=>{
+        sendUpdateGiftItemFunction(x)
+    })
+}
+const popUpForUpdatingGift=(x)=>{
+    const groupPagePopUp = document.getElementById('groupPagePopUp')
+    groupPagePopUp.innerHTML=`
+    <div>
+        <p>Enter Name: </p>
+        <input id="giftNameInput">
+        <p>Enter Budget: </p>
+        <input id="giftBudgetInput">
+        <button id="sendStuff">Send Stuff</button>
+    </div>
+    `
+    addEventListenersToGiftPagePop(x)
+}
+const addGiftEventListener =(giftUuid,x)=>{
+    const updateGiftItem = document.getElementById(`updateToken-${giftUuid}`)
+    updateGiftItem.addEventListener('click',()=>{
+        popUpForUpdatingGift(x)
+        sendUpdateGiftItemFunction(x)
+    })
+}
+const addGiftDetails=(x)=>{
+    const giftUuid = randomNumberToken()
+    const GiftPage = document.getElementById('GiftPage')
+    const giftDiv= document.createElement('div')
+    GiftPage.appendChild(giftDiv)
+    giftDiv.innerHTML=`
+    <div>
+        <p id="username-${giftUuid}">To: ${x.to.username}</p>
+        <p id="Group-${giftUuid}>Group: ${x.group.naP}</p>
+        <p id="updateToken-${giftUuid}>Update Gift item</p>
+    </div>
+    `
+    addGiftEventListener(giftUuid,x)
+}
 const makeLoginPageUi =()=>{
     clearLayout()
     const root = document.getElementById('root')
@@ -77,7 +130,8 @@ const homePage=()=>{
         </div>
     </div>
     <div id="PopUp">
-
+    </div>
+    <div id="GiftPage">
     </div>
 </div>
     `
@@ -86,8 +140,8 @@ const getUserData =async()=>{
     return new Promise(async(resolve,reject)=>{
         const token = localStorage.getItem('token')
         const result = await axios.get('http://localhost:3001/api/userdata',{headers:{'authorization':token}})
-        console.log(result)
         userData= result.data
+        console.log(userData)
         return resolve(100)
     })
    
@@ -100,26 +154,78 @@ const appendTheGroupThingy=(x,groupsDiv)=>{
         <p id="groupName-${x.roomId}">Group Name: ${x.name}</p>
         <p id="groupRoomId-${x.roomId}">Room Id: ${x.roomId}</p>
         <p id="visitGroupPage-${x.roomId}">Enter</p>
-        <p id="deleteGroupPage-${x.roomId}">Leave Group</p>
     `
     addEventListenersToGroup(x)
+}
+const getAdminText=async(x)=>{
+    const token = localStorage.getItem('token')
+    const resp = await axios.get(`http://localhost:3001/api/groupdata/${x._id}`,{headers:{'authorization':token}})
+    let userData = resp.data.participants
+    const admin = userData.find(y=>y.Details._id==x.creatorId)
+    const getAdmin = document.getElementById(`Admin-${x.roomId}`)
+    getAdmin.textContent=`Admin-${admin.Details.username}`
+    return admin.username
+}
+const removePopUpPassword=()=>{
+    document.getElementById('groupPagePopUp').innerHTML=''
+}
+const SubmitPasswordStuff=async(x)=>{
+    const token = localStorage.getItem('token')
+    const password = document.getElementById('inputForPassword').value
+    const body ={password:password}
+    const resp = await axios.post(`http://localhost:3001/api/groupdata/${x._id}/lockandshuffle`,body,{headers:{'authorization':token}})
+    if(resp.status==200){
+        removePopUpPassword()
+        alert('Each member has been assigned a secret santa')
+    }
+}
+const createPassWordPopUp=(x)=>{
+    const groupPagePopUp = document.getElementById("groupPagePopUp")
+    groupPagePopUp.innerHTML=`
+        <div>
+            <p>Lock Group and start secret Santa</p>
+            <p>Password</p>
+            <input id="inputForPassword"/>
+            <p id="submitInputPass">Submit</p>
+        </div>
+    `
+    const passWord= document.getElementById('submitInputPass')
+    passWord.addEventListener('click',()=>{
+        SubmitPasswordStuff(x)
+    })
+}  
+const addEventListenersToGiftPage=(x)=>{
+    const AdminFeatures = document.getElementById(`Features-${x.roomId}`)
+    AdminFeatures.addEventListener('click',()=>{
+        createPassWordPopUp(x)
+    })
 }
 const createGiftPageLayout=(x)=>{
     const root = document.getElementById('TheMainContent')
     root.innerHTML=`
         <div>
             <div>
-                <h2>${x.name}</h2>
-                <h3>${x.location}</h3>
-                <h4>${x.roomId}</h4>
+                <div>
+                    <h2>${x.name}</h2>
+                    <h3>${x.location}</h3>
+                    <h3 id="Admin-${x.roomId}">Admin:</h3>
+                    <h4>${x.roomId}</h4>
+                </div>
+                <div>
+                    <p id="Features-${x.roomId}">Admin Features</p>
+                </div>
             </div>
             <div>
                 <h2>Participants</h2>
                 <div id="ListOfParticipants">
                 </div>
             </div>
+            <div id="groupPagePopUp">
+            </div>
         </div>
     `
+    addEventListenersToGiftPage(x)
+
 }
 const updateParticipants = async(x) =>{
     const token = localStorage.getItem('token')
@@ -137,6 +243,7 @@ const updateParticipants = async(x) =>{
 }
 const GroupPageDisplay=async(x)=>{
     createGiftPageLayout(x)
+    getAdminText(x)
     updateParticipants(x)
 }
 const addEventListenersToGroup=(x)=>{
@@ -144,10 +251,7 @@ const addEventListenersToGroup=(x)=>{
     EnterGroupPage.addEventListener('click',()=>{
         GroupPageDisplay(x)
     })
-    const LeaveGroup = document.getElementById(`deleteGroupPage-${x.roomId}`)
-    LeaveGroup.addEventListener('click',()=>{
-        console.log('Leaving Group')
-    })
+    
 }
 
 const FillTheGroups = async()=>{
@@ -220,6 +324,8 @@ const sendJoinGroupData=async()=>{
         const resp = await axios.post("http://localhost:3001/api/groupdata/joingroup",body,{"headers":{"authorization":token}})
         if(resp.status==200){
             removePopUp()
+            await getUserData()
+            FillTheGroups()
         }
     }catch(e){
         alert(e.response.data.message)
@@ -256,6 +362,7 @@ const homePageAfterLogin=async()=>{
     await getUserData()
     homePage()
     FillTheGroups()
+    FillTheGifts()
     addEventListenerToMainContentSideBar()
 }
 const sendLoginDetails =async()=>{
@@ -300,9 +407,14 @@ const sendSignUpDetails = async()=>{
         makeLoginPageUi()
         addEventLoginPageListener()
     }
-
+}
+const removeTokenIfAny=()=>{
+    window.onbeforeunload = function() {
+        localStorage.removeItem('token');
+      };
 }
 const main =()=>{
+    removeTokenIfAny()
     makeSignUpPageUi()
     addEventSignUpPageListener()
 }

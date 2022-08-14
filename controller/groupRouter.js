@@ -97,7 +97,7 @@ groupRouter.get("/:id",async(req,res)=>{
     console.log(group)
     return res.status(200).send(group)
 })
-groupRouter.get("/:id/lockandshuffle",async(req,res)=>{
+groupRouter.post("/:id/lockandshuffle",async(req,res)=>{
     const token = getToken(req)
     if(!token){
         return res.status(400).send({message:"send a valid token"})
@@ -117,7 +117,7 @@ groupRouter.get("/:id/lockandshuffle",async(req,res)=>{
     if(number ==1){
         return res.status(400).send({message:"need two or more participants"})
     }
-    const indexOfParticipants = [...Array(number).keys]
+    const indexOfParticipants = [...Array(number).keys()]
     const secretSanta = derangement(indexOfParticipants)
     for(let i=0;i<number;i++){
         const newGift = new Gift({
