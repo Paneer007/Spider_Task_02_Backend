@@ -1,10 +1,8 @@
 const mongoose = require('mongoose')
 const giftSchema = mongoose.Schema({
-    to:mongoose.Schema.Types.ObjectId,
-    by:mongoose.Schema.Types.ObjectId,
+    to:{type:mongoose.Schema.Types.ObjectId,ref:"User"},
     name: String,
     budget:Number,
-    location:String,
-    
+    group:{type:mongoose.Schema.Types.ObjectId,ref:"Group"}
 })
 module.exports= mongoose.model('Gift',giftSchema)
