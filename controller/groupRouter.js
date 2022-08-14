@@ -4,6 +4,7 @@ const User = require("../model/User")
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const { v4: uuidv4 } = require('uuid');
+//TODO: fix join group
 const getToken=(req)=>{
     const authorization = req.get('authorization')
     if(authorization && authorization.toLowerCase().startsWith('bearer')){

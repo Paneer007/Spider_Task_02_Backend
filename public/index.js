@@ -102,21 +102,47 @@ const appendTheGroupThingy=(x,groupsDiv)=>{
         <p id="visitGroupPage-${x.roomId}">Enter</p>
         <p id="deleteGroupPage-${x.roomId}">Leave Group</p>
     `
-    addEventListenersToGroup(x.roomId)
+    addEventListenersToGroup(x)
 }
-const createGiftPageLayout=()=>{
-    const root = document.getElementById('root')
+const createGiftPageLayout=(x)=>{
+    const root = document.getElementById('TheMainContent')
     root.innerHTML=`
+        <div>
+            <div>
+                <h2>${x.name}</h2>
+                <h3>${x.location}</h3>
+                <h4>${x.roomId}</h4>
+            </div>
+            <div>
+                <h2>Participants</h2>
+                <div id="ListOfParticipants">
+                </div>
+            </div>
+        </div>
     `
 }
-const EnterGroupPage=async(x)=>{
-    clearLayout()
-    createGiftPageLayout()
+const updateParticipants = async(x) =>{
+    const token = localStorage.getItem('token')
+    const resp = await axios.get(`http://localhost:3001/api/groupdata/${x._id}`,{headers:{'authorization':token}})
+    console.log(resp)
+    let userData = resp.data.participants
+    const ListOfParticipants = document.getElementById("ListOfParticipants")
+    ListOfParticipants.innerHTML=''
+    userData.forEach((x)=>{
+        console.log(x)
+        let nameContent = document.createElement('p')
+        ListOfParticipants.appendChild(nameContent)
+        nameContent.textContent=x.Details.username
+    })
+}
+const GroupPageDisplay=async(x)=>{
+    createGiftPageLayout(x)
+    updateParticipants(x)
 }
 const addEventListenersToGroup=(x)=>{
     const EnterGroupPage = document.getElementById(`visitGroupPage-${x.roomId}`)
     EnterGroupPage.addEventListener('click',()=>{
-        EnterGroupPage()
+        GroupPageDisplay(x)
     })
     const LeaveGroup = document.getElementById(`deleteGroupPage-${x.roomId}`)
     LeaveGroup.addEventListener('click',()=>{
