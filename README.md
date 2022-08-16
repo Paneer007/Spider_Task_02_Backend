@@ -23,8 +23,8 @@
 ### Feature checklist
 <p>
     <s> Login/Signup </s> <br>
-    User Page<br>
-    Group Page <br>
-    Create and Join Group <br>
-    Detailed exchange page <br>
+    User Page</s><br>
+    Group Page</s><br>
+    Create and Join Group</s><br>
+    Detailed exchange page</s><br>
 </p>
