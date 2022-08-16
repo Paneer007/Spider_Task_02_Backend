@@ -1,0 +1,254 @@
+:root{
+    --rifle-green: #3e503cff;
+    --artichoke: #949c81ff;
+    --eggshell: #f0e6d1ff;
+    --dark-salmon: #ee9c81ff;
+    --apricot: #efc1a9ff;
+    --peach-puff:#ffdab9
+}
+
+body,html,#root{
+    position: relative;
+    background-color: var(--eggshell);
+    width: 100%;
+    padding: 0px;
+    margin: 0px;
+    font-family: montserrat;
+    display: flex;
+    flex-direction: row;
+}
+body{
+    overflow: auto;
+}
+.popUpContentHide{
+    visibility: hidden;
+}
+.MainEntryPage{
+    width: 100%;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.loginCard{
+    margin: 25vh;
+    width: 18%;
+    position: relative;
+    background-color: var(--apricot);
+    padding: 16px 12px;
+    border-radius: 8px;
+    box-shadow:4px 4px 2.5px rgb(144, 144, 144) ;
+}
+.CardHeader p{
+    font-size: larger;
+    font-weight: 700;
+    margin: 4px 2px 2px 2px;
+}
+.TypeOfCard{
+    margin: 2px;
+    font-size:medium; 
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+.inputStuffContent{
+    border:none;
+    font-size: medium;
+    padding:4px;
+    font-family: quicksand;
+    border-radius: 8px;
+    width: 80%;
+    margin: 2px;
+}
+.submitButtonDiv{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+.submitButtonStuff{
+    border:none;
+    border-radius: 8px;
+    padding: 6px 8px ;
+    font-size: medium;
+    font-family: quicksand;
+    background-color: var(--rifle-green);
+    color:var(--eggshell);
+    border: 1px solid var(--rifle-green);
+}
+.submitButtonStuff:hover{
+    background-color: var(--eggshell);
+    color: var(--rifle-green)
+}
+.SwapStuff{
+    color: rgb(103, 103, 199);
+}
+.UserPageDiv{
+    display: flex;
+    flex-direction: row;
+    min-height: 100%;
+    width: 100%;
+}
+.theSideBarContent{
+    min-height: 100vh;
+    min-width:200px;
+    background-color: var(--dark-salmon);
+}
+.sideBarContentDiv{
+    margin-top:40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.sideBarStuff{
+    background-color: var(--eggshell);
+    margin-bottom: 0px;
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid var(--rifle-green);
+}
+.sideBarStuff:hover{
+    color:var(--eggshell);
+    background-color: var(--rifle-green);
+}
+.TitleOfHomePage{
+    background-color: var(--artichoke);
+    width: 100%;
+}
+#greetingLogic{
+    padding:34px;
+    margin:0px;
+    font-size:xx-large;
+    font-weight: 600;
+}
+#ListOfGroupInFlex{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    gap:16px;
+    flex-wrap: wrap;
+}
+.GiftPage{
+    padding:16px;
+}
+
+.mainContentOfThisPage{
+    padding:16px;
+}
+.GameContent,.GiftDescBox{
+    width: 25vw;
+    height:30vh;
+    background-color: var(--apricot);
+    padding: 2px 16px;
+    border-radius: 8px;
+    box-shadow: 2px 2px 2px rgb(120, 118, 118);
+}
+.mainContentOfThisPage h3,.GiftPage h3{
+    margin-left: 40px;
+    font-size: x-large;
+    font-weight: 600;
+}
+.GroupDetailsTagEnter,.giftDescBoxButton{
+    background-color: var(--eggshell);
+    padding:1px;
+    border-radius: 4px;
+    border: 1px solid var(--rifle-green);
+    width:fit-content;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 2px 4px;
+    border-radius: 4px;
+    color:var(--rifle-green)
+}
+.GroupDetailsTagEnter:hover,.giftDescBoxButton:hover{
+    color:var(--eggshell);
+    background-color: var(--rifle-green);
+}
+#GroupHighStuff,.GroupHighStuff{
+    font-weight: 600;
+    font-size: medium;
+}
+.PopUp,.LSPopUp{
+    position: absolute;
+    top: 50%; right: 50%;
+    transform: translate(50%,-50%);
+    background-color: var(--peach-puff);
+    width: 20vw;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border-radius: 8px;
+    box-shadow: 2px 2px 2px rgb(141, 134, 134);
+    font-size: 18px;
+}
+.TheMainContent{
+    position: relative;
+    width: 100%;
+}
+.addGroupInput,.LSPopUpInput{
+    border: none;
+    border-radius: 8px;
+    padding: 2px;
+    border: 1px solid var(--rifle-green);
+    width:100%;
+}
+.OptionButtonPopUp{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap:10px;
+}
+#sendGroupInput,#sendGroupIDInput,#submitInputPass{
+    background-color: var(--rifle-green);
+    color: var(--eggshell);
+    padding: 2px 4px;
+    border-radius: 4px;
+    border: 1px solid var(--rifle-green);
+}
+#sendGroupInput:hover, #sendGroupIDInput:hover, #submitInputPass:hover{
+    background-color: var(--eggshell);
+    color:var(--rifle-green);
+}
+#cancelGroupInput, #deleteInputPass{
+    background-color: rgb(246, 86, 86);
+    color: var(--eggshell);
+    padding: 3px 8px;
+    border-radius: 4px;
+    border: 1px solid rgb(246, 86, 86);
+}
+#cancelGroupInput:hover,#deleteInputPass:hover{
+    background-color: var(--eggshell);
+    color:rgb(246, 86, 86);
+}
+.DivForParticipants{
+    padding: 8px;
+}
+.groupDescription{
+    display:flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+.groupDescription{
+    background-color: var(--artichoke);
+    padding: 0px 8px;
+}
+.AdminFeatures{
+    background-color: var(--eggshell);
+    border-radius: 8px;
+    padding:4px;
+    border: solid 1px var(--rifle-green);
+    font-size: large;
+
+}
+.AdminFeatures:hover{
+    color:var(--eggshell);
+    background-color: var(--rifle-green);
+}
